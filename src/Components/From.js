@@ -1,13 +1,34 @@
 import { Box, Modal } from "@mui/material";
 import GoogleMapReact from 'google-map-react';
 import { useEffect, useState } from "react";
-import MosqueSharpIcon from '@mui/icons-material/MosqueSharp';
+import PersonPinIcon from '@mui/icons-material/PersonPin';
 export const From = (props) => {
     const handleApiLoaded = (map, maps) => {
         // use map and maps objects
     };
-    const handleClose = () => props.openM = false;
-    const handleOpen = () => props.openM = true;
+    const [lat, setlat] = useState(0);
+    const [log, setlog] = useState(0);
+    const [open,setopen] = useState(true);
+    const [endlati,setendlati] = useState();
+    const [endlong,setendlong] = useState();
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            console.log("Latitude is :", position.coords.latitude);
+            if (lat == 0) {
+            setlat(position.coords.latitude);
+                
+            }
+            if (log == 0) {
+            setlog(position.coords.longitude)
+                
+            }
+            setopen(props.openM)
+            console.log("Longitude is :", position.coords.longitude);
+        });
+    }, [props.openM]);
+    const handleClose = () => setopen(false);
+    const handleOpen = () => setopen(true);
+  
     const style = {
         position: 'absolute',
         top: '50%',
@@ -19,53 +40,68 @@ export const From = (props) => {
         boxShadow: 24,
         p: 4,
         height: 578
-      };
+    };
 
-      const defaultProps = {
-        
+    const defaultProps = {
+
         center: {
-            lat: Number.parseFloat(4.218318444942715),
-            lng: Number.parseFloat(73.54366587116596)
+            lat: 0,
+            lng: 0
         },
-        zoom: 19
+        zoom: 17
     };
 
     return (
         <>
-            <Modal
-                open={props.openM}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={style}>
-                <GoogleMapReact
-                    bootstrapURLKeys={{ key: "AIzaSyBuEoAEoYevrgE0gs371dIuFS8AfHncRKY" }}
-                    defaultCenter={defaultProps.center}
-                    center={
-                        {
-                            lat: Number.parseFloat(4.218318444942715),
-                            lng: Number.parseFloat(73.54366587116596)
-                        }
-                    }
-                    defaultZoom={defaultProps.zoom}
-                    yesIWantToUseGoogleMapApiInternals
-                >
+            {
+                lat &&
 
-                    <MosqueSharpIcon style={{ color: "maroon" }} lat={Number.parseFloat(4.218318444942715)}
-                        lng={Number.parseFloat(73.54366587116596)} />
-                    {/* <AnyReactComponent 
+                <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style}>
+                        <GoogleMapReact
+                            onClick={ev => {
+                                setlat(ev.lat);
+                                setlog(ev.lng);
+                                props.setFormInfp();
+                                console.log("latitide = ", ev.latLng.lat());
+                                console.log("longitude = ", ev.latLng.lng());
+                              }}
+                            bootstrapURLKeys={{ key: "AIzaSyBuEoAEoYevrgE0gs371dIuFS8AfHncRKY" }}
+                            defaultCenter={defaultProps.center}
+                            center={
+                                {
+                                    lat: lat,
+                                    lng: log
+                                }
+                            }
+                            defaultZoom={defaultProps.zoom}
+                            yesIWantToUseGoogleMapApiInternals
+                            onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
+                            coordinates={true}
+                        >
+
+                            <PersonPinIcon style={{ color: "maroon" }} lat={lat}
+                                lng={log} />
+                              
+                            {/* <AnyReactComponent 
                         lat={Number.parseFloat(props.lat)}
                         lng={Number.parseFloat(props.lng)}
                         text={props.name}
 
                      
                     /> */}
-                </GoogleMapReact>
+                        </GoogleMapReact>
 
-                </Box>
-            </Modal>
-       
+                    </Box>
+                </Modal>
+            }
+
+
         </>
     );
 }

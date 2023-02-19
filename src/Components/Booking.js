@@ -3,12 +3,18 @@ import { Card, CardContent, TextField, Typography } from '@mui/material';
 import CircleIcon from '@mui/icons-material/Circle';
 import { useEffect, useState } from 'react';
 import { From } from './From';
-
+import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 
 
 export const Booking = () => {
-    const[open,setopen] = useState(true)
-    
+    const [open1, setopen1] = useState(false)
+    const fromOpen = () => {
+        setopen1(!open1);
+    }
+    const [fromTaken, setfromTaken] = useState(false);
+    const commitTaken = () => {
+        setfromTaken(true);
+    }
     return (
         <>
             <div className="container" style={{ paddingRight: 20, paddingLeft: 20 }}>
@@ -33,7 +39,12 @@ export const Booking = () => {
 
                                             </div>
                                             <div className='col'>
-                                                <TextField style={{ marginTop: -10 }} fullWidth id="standard-basic" variant="standard" />
+                                                {
+                                                    fromTaken &&
+                                                    <CheckCircleOutlineRoundedIcon style={{ color: "green" }}></CheckCircleOutlineRoundedIcon>
+
+                                                }
+                                                <TextField onClick={fromOpen} onChange={fromOpen} style={{ marginTop: -10 }} fullWidth variant="standard" />
 
                                             </div>
                                         </div>
@@ -43,7 +54,7 @@ export const Booking = () => {
 
                                             </div>
                                             <div className='col'>
-                                                <TextField style={{ marginTop: -10 }} fullWidth id="standard-basic" variant="standard" />
+                                                <TextField  onClick={fromOpen} onChange={fromOpen}  style={{ marginTop: -10 }} fullWidth variant="standard" />
 
                                             </div>
                                         </div>
@@ -53,7 +64,7 @@ export const Booking = () => {
 
                                             </div>
                                             <div className='col'>
-                                                <TextField style={{ marginTop: -10 }} fullWidth id="standard-basic" variant="standard" />
+                                                <TextField style={{ marginTop: -10 }} fullWidth variant="standard" />
 
                                             </div>
                                         </div>
@@ -85,7 +96,7 @@ export const Booking = () => {
                 </div>
 
             </div>
-            <From openM = {open} ></From>
+            <From setFormInfp = {commitTaken} openM={open1} ></From>
         </>
     );
 }
