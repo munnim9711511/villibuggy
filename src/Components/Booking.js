@@ -8,6 +8,7 @@ import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlin
 
 export const Booking = () => {
     const [open1, setopen1] = useState(false)
+    let top = -26
     const fromOpen = () => {
         setopen1(!open1);
     }
@@ -44,7 +45,7 @@ export const Booking = () => {
                                                     <CheckCircleOutlineRoundedIcon style={{ color: "green" }}></CheckCircleOutlineRoundedIcon>
 
                                                 }
-                                                <TextField onClick={fromOpen} onChange={fromOpen} style={{ marginTop: -10 }} fullWidth variant="standard" />
+                                                <TextField onClick={fromOpen} onChange={fromOpen} style={{ marginTop: top }} fullWidth variant="standard" />
 
                                             </div>
                                         </div>
