@@ -2,25 +2,29 @@ import { Box, Modal } from "@mui/material";
 import GoogleMapReact from 'google-map-react';
 import { useEffect, useState } from "react";
 import PersonPinIcon from '@mui/icons-material/PersonPin';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 export const From = (props) => {
     const handleApiLoaded = (map, maps) => {
         // use map and maps objects
     };
     const [lat, setlat] = useState(0);
     const [log, setlog] = useState(0);
-    const [open,setopen] = useState(true);
-    const [endlati,setendlati] = useState();
-    const [endlong,setendlong] = useState();
+    const [open, setopen] = useState(true);
+    const [firstlocSelected, setfirstlocSelected] = useState(false);
+    const [endlati, setendlati] = useState();
+    const [endlong, setendlong] = useState();
+    const [date,setdate] = useState();
     useEffect(() => {
+   
         navigator.geolocation.getCurrentPosition(function (position) {
             console.log("Latitude is :", position.coords.latitude);
             if (lat == 0) {
-            setlat(position.coords.latitude);
-                
+                setlat(position.coords.latitude);
+
             }
             if (log == 0) {
-            setlog(position.coords.longitude)
-                
+                setlog(position.coords.longitude)
+
             }
             setopen(props.openM)
             console.log("Longitude is :", position.coords.longitude);
@@ -28,7 +32,7 @@ export const From = (props) => {
     }, [props.openM]);
     const handleClose = () => setopen(false);
     const handleOpen = () => setopen(true);
-  
+
     const style = {
         position: 'absolute',
         top: '50%',
@@ -65,12 +69,24 @@ export const From = (props) => {
                     <Box sx={style}>
                         <GoogleMapReact
                             onClick={ev => {
-                                setlat(ev.lat);
-                                setlog(ev.lng);
-                                props.setFormInfp();
+
+                                if (firstlocSelected === false) {
+                                    setlat(ev.lat);
+                                    setlog(ev.lng);
+                                    setfirstlocSelected(true);
+                                    props.setFormInfp();
+                                    props.from(ev.lat,ev.lng);
+                                }
+                                else {
+                                    setendlati(ev.lat);
+                                    setendlong(ev.lng);
+                                    props.from(ev.lat,ev.lng);
+                                    props.setTo();
+                                }
+                              
                                 console.log("latitide = ", ev.latLng.lat());
                                 console.log("longitude = ", ev.latLng.lng());
-                              }}
+                            }}
                             bootstrapURLKeys={{ key: "AIzaSyBuEoAEoYevrgE0gs371dIuFS8AfHncRKY" }}
                             defaultCenter={defaultProps.center}
                             center={
@@ -87,7 +103,13 @@ export const From = (props) => {
 
                             <PersonPinIcon style={{ color: "maroon" }} lat={lat}
                                 lng={log} />
-                              
+                                {
+                                    firstlocSelected && endlati &&
+                                    <LocationOnIcon style={{ color: "maroon" }} lat={endlati}
+                                    lng={endlong}></LocationOnIcon>
+
+                                }
+
                             {/* <AnyReactComponent 
                         lat={Number.parseFloat(props.lat)}
                         lng={Number.parseFloat(props.lng)}

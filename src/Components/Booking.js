@@ -1,20 +1,41 @@
 import DirectionsCarRoundedIcon from '@mui/icons-material/DirectionsCarRounded';
-import { Card, CardContent, TextField, Typography } from '@mui/material';
+import { Button, Card, CardContent, TextField, Typography } from '@mui/material';
 import CircleIcon from '@mui/icons-material/Circle';
 import { useEffect, useState } from 'react';
 import { From } from './From';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
-
+import BookIcon from '@mui/icons-material/Book';
 
 export const Booking = () => {
     const [open1, setopen1] = useState(false)
     let top = -26
-    const fromOpen = () => {
+    const fromOpen = (s) => {
+        setsetp(s);
         setopen1(!open1);
     }
     const [fromTaken, setfromTaken] = useState(false);
+    const [toTaken, settoTaken] = useState(false);
+    const [setp, setsetp] = useState();
+    const[fromclienla,setfromclienla] = useState(0);
+    const[fromclienlo,setfromclienlo] = useState(0);
+
+    const[endclienla,setendclienla] = useState(0);
+    const[endclienlo,setendclienlo] = useState(0);
+    const[number,setnumber] = useState('');
+    const[date,setdate] = useState('');
     const commitTaken = () => {
         setfromTaken(true);
+    }
+    const setFromClient = (l,lo)=>{
+        setfromclienla(l);
+        setfromclienlo(lo);
+    }
+    const setendClient = (l,lo)=>{
+        setendclienla(l);
+        setendclienlo(lo);
+    }
+    const committoTaken = () => {
+        settoTaken(true);
     }
     return (
         <>
@@ -45,7 +66,7 @@ export const Booking = () => {
                                                     <CheckCircleOutlineRoundedIcon style={{ color: "green" }}></CheckCircleOutlineRoundedIcon>
 
                                                 }
-                                                <TextField onClick={fromOpen} onChange={fromOpen} style={{ marginTop: top }} fullWidth variant="standard" />
+                                                <TextField onClick={()=>fromOpen("F")} onChange={()=>fromOpen("F")} style={{ marginTop: top }} fullWidth variant="standard" />
 
                                             </div>
                                         </div>
@@ -55,7 +76,12 @@ export const Booking = () => {
 
                                             </div>
                                             <div className='col'>
-                                                <TextField  onClick={fromOpen} onChange={fromOpen}  style={{ marginTop: -10 }} fullWidth variant="standard" />
+                                                {
+                                                    toTaken &&
+                                                    <CheckCircleOutlineRoundedIcon style={{ color: "green" }}></CheckCircleOutlineRoundedIcon>
+
+                                                }
+                                                <TextField onClick={()=>fromOpen("T")} onChange={()=>fromOpen("T")} style={{ marginTop: top }} fullWidth variant="standard" />
 
                                             </div>
                                         </div>
@@ -65,7 +91,7 @@ export const Booking = () => {
 
                                             </div>
                                             <div className='col'>
-                                                <TextField style={{ marginTop: -10 }} fullWidth variant="standard" />
+                                                <TextField value={number} onChange={e=>setnumber(e.target.value)} style={{ marginTop: -10 }} fullWidth variant="standard" />
 
                                             </div>
                                         </div>
@@ -82,7 +108,7 @@ export const Booking = () => {
                                         <div className='row' style={{ marginBottom: 15 }}>
 
                                             <div className='col'>
-                                                <TextField label={"When"} type={"datetime-local"} fullWidth></TextField>
+                                                <TextField label={"When"} value={date} onChange={e=>setdate(e.target.value)} type={"datetime-local"} fullWidth></TextField>
                                             </div>
                                         </div>
 
@@ -92,12 +118,17 @@ export const Booking = () => {
                                 </Card>
                             </div>
                         </div>
+                        <div className='row' style={{ marginTop: 20 }}>
+                            <div className='col-md-12'>
+                                <Button variant={'contained'} endIcon={<BookIcon></BookIcon>} fullWidth>Book</Button>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
 
             </div>
-            <From setFormInfp = {commitTaken} openM={open1} ></From>
+            <From end = {setendClient} from = {setFromClient}   start = {setsetp} setTo = {committoTaken} setFormInfp={commitTaken} openM={open1} ></From>
         </>
     );
 }
