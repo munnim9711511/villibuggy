@@ -37,6 +37,13 @@ export const Booking = () => {
     const committoTaken = () => {
         settoTaken(true);
     }
+    const close = ()=>{
+        setopen1(!setopen1)
+    }
+
+
+
+    
     return (
         <>
             <div className="container" style={{ paddingRight: 20, paddingLeft: 20 }}>
@@ -128,7 +135,7 @@ export const Booking = () => {
                 </div>
 
             </div>
-            <From end = {setendClient} from = {setFromClient}   start = {setsetp} setTo = {committoTaken} setFormInfp={commitTaken} openM={open1} ></From>
+            <From closeD = {close} end = {setendClient} from = {setFromClient}   start = {setsetp} setTo = {committoTaken} setFormInfp={commitTaken} openM={open1} ></From>
         </>
     );
 }

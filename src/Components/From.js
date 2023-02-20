@@ -1,21 +1,27 @@
-import { Box, Modal } from "@mui/material";
+import { Box, Dialog, Modal } from "@mui/material";
 import GoogleMapReact from 'google-map-react';
 import { useEffect, useState } from "react";
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import Slide from '@mui/material/Slide';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+
+import DialogTitle from '@mui/material/DialogTitle';
 export const From = (props) => {
     const handleApiLoaded = (map, maps) => {
         // use map and maps objects
     };
     const [lat, setlat] = useState(0);
     const [log, setlog] = useState(0);
-    const [open, setopen] = useState(true);
+    const [open, setopen] = useState(false);
     const [firstlocSelected, setfirstlocSelected] = useState(false);
     const [endlati, setendlati] = useState();
     const [endlong, setendlong] = useState();
-    const [date,setdate] = useState();
+    const [date, setdate] = useState();
+
     useEffect(() => {
-   
+
         navigator.geolocation.getCurrentPosition(function (position) {
             console.log("Latitude is :", position.coords.latitude);
             if (lat == 0) {
@@ -30,8 +36,7 @@ export const From = (props) => {
             console.log("Longitude is :", position.coords.longitude);
         });
     }, [props.openM]);
-    const handleClose = () => setopen(false);
-    const handleOpen = () => setopen(true);
+
 
     const style = {
         position: 'absolute',
@@ -45,7 +50,10 @@ export const From = (props) => {
         p: 4,
         height: 578
     };
-
+    const handleClose = () => {
+       
+        setopen(false);
+    };
     const defaultProps = {
 
         center: {
@@ -60,14 +68,16 @@ export const From = (props) => {
             {
                 lat &&
 
-                <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box sx={style}>
+                <Dialog PaperProps={{
+                    sx: {
+                      width: "100%",
+                      height:"50%",
+                      maxWidth: "720px!important",
+                    },
+                  }}   open={props.openM}>
+                    <DialogContent >
                         <GoogleMapReact
+                         yesIWantToUseGoogleMapApiInternals
                             onClick={ev => {
 
                                 if (firstlocSelected === false) {
@@ -75,15 +85,17 @@ export const From = (props) => {
                                     setlog(ev.lng);
                                     setfirstlocSelected(true);
                                     props.setFormInfp();
-                                    props.from(ev.lat,ev.lng);
+                                    props.from(ev.lat, ev.lng);
+                                    props.closeD()
                                 }
                                 else {
                                     setendlati(ev.lat);
                                     setendlong(ev.lng);
-                                    props.from(ev.lat,ev.lng);
+                                    props.from(ev.lat, ev.lng);
+                                    props.closeD()
                                     props.setTo();
                                 }
-                              
+
                                 console.log("latitide = ", ev.latLng.lat());
                                 console.log("longitude = ", ev.latLng.lng());
                             }}
@@ -96,31 +108,27 @@ export const From = (props) => {
                                 }
                             }
                             defaultZoom={defaultProps.zoom}
-                            yesIWantToUseGoogleMapApiInternals
+                           
                             onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
                             coordinates={true}
                         >
 
                             <PersonPinIcon style={{ color: "maroon" }} lat={lat}
                                 lng={log} />
-                                {
-                                    firstlocSelected && endlati &&
-                                    <LocationOnIcon style={{ color: "maroon" }} lat={endlati}
+                            {
+                                firstlocSelected && endlati &&
+                                <LocationOnIcon style={{ color: "maroon" }} lat={endlati}
                                     lng={endlong}></LocationOnIcon>
 
-                                }
+                            }
 
-                            {/* <AnyReactComponent 
-                        lat={Number.parseFloat(props.lat)}
-                        lng={Number.parseFloat(props.lng)}
-                        text={props.name}
 
-                     
-                    /> */}
                         </GoogleMapReact>
+                    </DialogContent>
 
-                    </Box>
-                </Modal>
+                </Dialog>
+
+
             }
 
 
